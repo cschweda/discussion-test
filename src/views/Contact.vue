@@ -3,7 +3,7 @@
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
-          <h1>About Page</h1>
+          <h1>Contact Us</h1>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed
             mi sit amet neque dapibus viverra. Sed volutpat a est vitae
@@ -19,30 +19,6 @@
             Suspendisse lorem libero, finibus sit amet nibh non, lacinia
             scelerisque nulla. Maecenas fermentum arcu mauris, eu malesuada orci
             dignissim nec.
-          </p>
-
-          <p>
-            Aliquam vel felis metus. Aliquam congue erat nec metus facilisis
-            hendrerit. Vivamus eu lobortis ligula. Nulla placerat ut ipsum at
-            semper. Integer elit tortor, fringilla non pellentesque at, faucibus
-            in dui. Donec malesuada sodales dolor auctor gravida. Nunc
-            consectetur viverra ligula, ac aliquam elit porttitor in. Nunc
-            tristique nisl nisi, eget accumsan lacus faucibus in. Nunc id
-            tristique eros. Integer aliquam ipsum vitae posuere interdum.
-          </p>
-          <h2>Nunc magna arcu</h2>
-          <p>
-            Nunc magna arcu, convallis vel mollis non, vestibulum non sapien.
-            Duis vulputate felis nec nunc tempor, ut ornare lacus malesuada.
-            Nunc sollicitudin ipsum a nisl varius mollis. Donec in vestibulum
-            neque. Vivamus ut nisi convallis, egestas lacus quis, blandit arcu.
-            Etiam scelerisque purus vitae neque vehicula, ultrices tristique
-            neque lacinia. Nunc pretium, justo sed efficitur fermentum, turpis
-            nulla vestibulum libero, in interdum libero sem vitae augue. In nec
-            lacinia tortor. Duis sed tellus aliquam, ultricies eros vitae, porta
-            nulla. Curabitur vehicula, eros et condimentum molestie, augue erat
-            imperdiet erat, id semper lectus erat a orci. Suspendisse diam
-            mauris, consectetur non venenatis at, faucibus ultrices nunc.
           </p>
 
           <p>
