@@ -1,18 +1,18 @@
 <template>
-  <div style="border-top: 1px solid #ccc; padding-top: 25px;">
+  <div
+    style="border-top: 1px solid #ccc; padding-top: 25px; min-height: 1200px;"
+  >
     <h2 class="mb-3">Discussions</h2>
-    <div v-if="!posts.length">No discussions yet</div>
-    <div v-else v-for="post in posts" :key="post.id">
-      <!-- <h3>{{ post.title }}</h3>
-      <p v-html="render(post.content)" class="markdown-body">
-        {{ post.content }}
-      </p> -->
+    {{ discussionID }}
+    <div v-for="post in posts" :key="post.id">
       <v-card class="mb-3 elevation-0">
         <v-card-title
           style="font-weight: 700; text-transform: uppercase; font-size: 16px;"
           >{{ post.title }}</v-card-title
         >
-        <v-card-text>{{ post.created_at }}</v-card-text>
+        <v-card-text style="margin-top: -25px;">{{
+          new Date(post.created_at)
+        }}</v-card-text>
         <v-card-text>
           <span v-html="render(post.content)" class="markdown-body">
             {{ post.content }}
@@ -29,18 +29,26 @@
           <v-tab-item>
             <v-textarea
               box
+              height="300"
               name="input-7-1"
-              label="Comment"
               value=""
               hint="Enter your comment"
               v-model="markdown"
+              class="py-2 px-1"
             ></v-textarea>
           </v-tab-item>
           <v-tab ripple> Preview </v-tab>
           <v-tab-item>
-            {{ renderedText }}
+            <div
+              class="markdown-body py-3 px-1"
+              v-html="renderedText"
+              style="min-height: 300px;"
+            ></div>
           </v-tab-item>
         </v-tabs>
+        <div class="text-xs-right">
+          <v-btn @click.prevent="submit">Submit</v-btn>
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -76,6 +84,9 @@ export default {
     render(content) {
       return md.render(content);
     },
+    submit() {
+      console.log("submit");
+    },
     getPosts() {
       axios({
         url: "http://localhost:5000/graphql",
@@ -100,7 +111,7 @@ export default {
   },
   computed: {
     renderedText() {
-      return this.markdown;
+      return this.render(this.markdown);
     }
   },
   data() {
@@ -123,5 +134,15 @@ export default {
 .markdown-body h3,
 .markdown-body h4 {
   font-size: 14px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+.markdown-body h1 {
+  text-transform: uppercase;
+}
+
+.markdown-body h2 {
+  border-bottom: 1px solid #eee;
 }
 </style>

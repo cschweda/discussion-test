@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page">
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
@@ -64,7 +64,7 @@
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
-          <discussion :path="$route.path"></discussion>
+          <discussion :path="$route.path" :appID="config.appID"></discussion>
         </v-flex>
       </v-container>
     </v-layout>
@@ -72,10 +72,22 @@
 </template>
 
 <script>
+import config from "@/config";
 import Discussion from "@/components/Discussion";
 export default {
+  data() {
+    return {
+      config
+    };
+  },
   components: {
     Discussion
   }
 };
 </script>
+
+<style>
+.page {
+  min-height: 100vh;
+}
+</style>

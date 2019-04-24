@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page">
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
