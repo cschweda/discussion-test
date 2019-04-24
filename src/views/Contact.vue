@@ -40,7 +40,7 @@
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
-          <discussion :path="$route.path"></discussion>
+          <discussion :path="$route.path" :moderate="true"></discussion>
         </v-flex>
       </v-container>
     </v-layout>

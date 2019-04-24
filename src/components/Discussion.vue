@@ -1,11 +1,12 @@
 <template>
   <div
-    style="border-top: 1px solid #ccc; padding-top: 25px; min-height: 1200px;"
+    style="border-top: 1px solid #ccc; padding-top: 25px; min-height: 700px;"
   >
     <h2 class="mb-3">Discussions</h2>
-    {{ discussionID }}
+
+    <div v-if="!postsExist">No discussions yet</div>
     <div v-for="post in posts" :key="post.id">
-      <v-card class="mb-3 elevation-0">
+      <v-card class="mb-3 elevation-0" v-if="!post.hidden">
         <v-card-title
           style="font-weight: 700; text-transform: uppercase; font-size: 16px;"
           >{{ post.title }}</v-card-title
@@ -23,13 +24,14 @@
 
     <v-card class="mt-5 mb-5">
       <v-card-text>
+        {{ discussionID }}
         <v-text-field v-model="title" label="Title" required></v-text-field>
         <v-tabs dark slider-color="grey">
           <v-tab ripple> Write </v-tab>
           <v-tab-item>
             <v-textarea
               box
-              height="300"
+              height="250"
               name="input-7-1"
               value=""
               hint="Enter your comment"
@@ -46,6 +48,7 @@
             ></div>
           </v-tab-item>
         </v-tabs>
+
         <div class="text-xs-right">
           <v-btn @click.prevent="submit">Submit</v-btn>
         </div>
@@ -74,18 +77,53 @@ export default {
     path: {
       type: String,
       default: ""
+    },
+    moderate: {
+      type: Boolean,
+      default: false
     }
   },
-  mounted() {
+  created() {
     this.discussionID = md5(config.meta.appID + this.path);
     this.getPosts();
   },
+
   methods: {
     render(content) {
       return md.render(content);
     },
     submit() {
-      console.log("submit");
+      axios({
+        url: "http://localhost:5000/graphql",
+        method: "post",
+        data: {
+          query: `
+           mutation {
+  createPosts (input: {
+    data: {
+      title: "${this.title}",
+      discussionID: "${this.discussionID}",
+      content: "${this.markdown}",
+      hidden: ${this.hidden}
+    }
+  }) {
+    post {
+      id
+    }
+  }
+}
+      `
+        }
+      }).then(result => {
+        console.log("Mutation result: ", result);
+      });
+      this.getPosts();
+      this.$forceUpdate();
+      this.clearForm();
+    },
+    clearForm() {
+      this.title = "";
+      this.markdown = "";
     },
     getPosts() {
       axios({
@@ -93,15 +131,17 @@ export default {
         method: "post",
         data: {
           query: `
-      {
-  posts(where: {discussionID: "${this.discussionID}"}) {
-    discussionID
-    id
-    title
-    content,
-    created_at
-  }
-}
+            {
+                posts(where: {discussionID: "${this.discussionID}"}) 
+                    {
+                        discussionID
+                        id
+                        title
+                        content,
+                        created_at,
+                        hidden
+                    }
+            }
       `
         }
       }).then(result => {
@@ -112,6 +152,15 @@ export default {
   computed: {
     renderedText() {
       return this.render(this.markdown);
+    },
+    postsExist() {
+      if (this.posts) {
+        return this.posts.length;
+      }
+      return false;
+    },
+    hidden() {
+      return this.moderate;
     }
   },
   data() {
