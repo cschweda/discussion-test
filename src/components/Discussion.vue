@@ -5,19 +5,19 @@
   >
     <h2 class="mb-3">Discussions</h2>
 
-    <div v-if="!postsExist">No discussions yet</div>
-    <div v-for="post in posts" :key="post.id">
-      <v-card class="mb-3 elevation-0" v-if="!post.hidden">
+    <div v-if="!commentsExist">No discussions yet</div>
+    <div v-for="comment in comments" :key="comment.id">
+      <v-card class="mb-3 elevation-0" v-if="!comment.hidden">
         <v-card-title
           style="font-weight: 700; text-transform: uppercase; font-size: 16px;"
-          >{{ post.title }}</v-card-title
+          >{{ comment.title }}</v-card-title
         >
         <v-card-text style="margin-top: -25px;">{{
-          new Date(post.created_at)
+          new Date(comment.created_at)
         }}</v-card-text>
         <v-card-text>
-          <span v-html="render(post.content)" class="markdown-body">
-            {{ post.content }}
+          <span v-html="render(comment.content)" class="markdown-body">
+            {{ comment.content }}
           </span>
         </v-card-text>
       </v-card>
@@ -27,7 +27,7 @@
       <v-card-text>
         {{ discussionID }}
         <v-text-field v-model="title" label="Title" required></v-text-field>
-        <v-tabs dark slider-color="grey">
+        <v-tabs dark slider-color="red">
           <v-tab ripple> Write </v-tab>
           <v-tab-item>
             <v-textarea
@@ -90,7 +90,7 @@ export default {
   },
   created() {
     this.discussionID = md5(config.meta.appID + this.path);
-    this.getPosts();
+    this.getComments();
   },
 
   methods: {
@@ -104,7 +104,7 @@ export default {
         data: {
           query: `
            mutation {
-  createPosts (input: {
+  createComments (input: {
     data: {
       title: "${this.title}",
       discussionID: "${this.discussionID}",
@@ -114,7 +114,7 @@ export default {
 
     }
   }) {
-    post {
+    comment {
       id
     }
   }
@@ -124,10 +124,10 @@ export default {
       }).then(result => {
         console.log(
           "Successful mutation. ID:",
-          result.data.data.createPosts.post.id
+          result.data.data.createComments.comment.id
         );
       });
-      this.getPosts();
+      this.getComments();
       this.$forceUpdate();
       this.clearForm();
     },
@@ -135,14 +135,14 @@ export default {
       this.title = "";
       this.markdown = "";
     },
-    getPosts() {
+    getComments() {
       axios({
         url: "http://localhost:5000/graphql",
         method: "post",
         data: {
           query: `
             {
-                posts(where: {discussionID: "${this.discussionID}"}) 
+                comments(where: {discussionID: "${this.discussionID}"}) 
                     {
                         discussionID
                         id
@@ -155,7 +155,7 @@ export default {
       `
         }
       }).then(result => {
-        this.posts = result.data.data.posts;
+        this.comments = result.data.data.comments;
       });
     }
   },
@@ -163,9 +163,9 @@ export default {
     renderedText() {
       return this.render(this.markdown);
     },
-    postsExist() {
-      if (this.posts) {
-        return this.posts.length;
+    commentsExist() {
+      if (this.comments) {
+        return this.comments.length;
       }
       return false;
     },
@@ -177,10 +177,10 @@ export default {
     return {
       config,
       discussionID: null,
-      posts: null,
+      comments: null,
       title: "",
       comment: "",
-      userID: 1,
+      userID: 2,
       markdown: ""
     };
   }
@@ -188,6 +188,14 @@ export default {
 </script>
 
 <style>
+@import url("../../node_modules/github-markdown-css/github-markdown.css");
+
+.markdown-body code {
+  background-color: #f5f5f5;
+  color: #555;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
