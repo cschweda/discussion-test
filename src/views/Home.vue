@@ -64,7 +64,11 @@
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
-          <discussion :path="$route.path" :appID="config.appID"></discussion>
+          <discussion
+            :path="$route.path"
+            :appID="config.appID"
+            :display="false"
+          ></discussion>
         </v-flex>
       </v-container>
     </v-layout>

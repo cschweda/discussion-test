@@ -1,6 +1,7 @@
 <template>
   <div
     style="border-top: 1px solid #ccc; padding-top: 25px; min-height: 700px;"
+    v-if="display"
   >
     <h2 class="mb-3">Discussions</h2>
 
@@ -81,6 +82,10 @@ export default {
     moderate: {
       type: Boolean,
       default: false
+    },
+    display: {
+      type: Boolean,
+      default: true
     }
   },
   created() {
@@ -104,7 +109,9 @@ export default {
       title: "${this.title}",
       discussionID: "${this.discussionID}",
       content: "${this.markdown}",
-      hidden: ${this.hidden}
+      hidden: ${this.hidden},
+      user: "${this.userID}"
+
     }
   }) {
     post {
@@ -115,7 +122,10 @@ export default {
       `
         }
       }).then(result => {
-        console.log("Mutation result: ", result);
+        console.log(
+          "Successful mutation. ID:",
+          result.data.data.createPosts.post.id
+        );
       });
       this.getPosts();
       this.$forceUpdate();
@@ -170,7 +180,7 @@ export default {
       posts: null,
       title: "",
       comment: "",
-      username: "cschweda@gmail.com",
+      userID: 1,
       markdown: ""
     };
   }
