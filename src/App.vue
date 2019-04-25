@@ -5,8 +5,9 @@
         class="headline text-uppercase"
         style="font-weight: 700;"
       >
-        <span>Discussion API</span>&nbsp;
-        <span class="font-weight-light">TEST</span>
+        <span>{{ config.meta.title }}</span
+        >&nbsp;
+        <span class="font-weight-light">{{ config.meta.subtitle }}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn to="/" class="heavy">Home</v-btn>
@@ -21,12 +22,13 @@
 </template>
 
 <script>
+import config from "@/config";
 export default {
   name: "App",
   components: {},
   data() {
     return {
-      //
+      config
     };
   }
 };

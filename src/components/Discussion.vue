@@ -7,7 +7,7 @@
 
     <div v-if="!commentsExist">No discussions yet</div>
     <div v-for="comment in comments" :key="comment.id">
-      <v-card class="mb-3 elevation-1" v-if="!comment.hidden">
+      <v-card class="mb-3 elevation-0" v-if="!comment.hidden">
         <v-card-text style="margin-top: 15px;">{{
           new Date(comment.created_at)
         }}</v-card-text>
@@ -105,10 +105,10 @@ export default {
         }
       }).then(result => {
         console.log(result.data.id);
+        this.getComments();
+        this.clearForm();
+        this.$forceUpdate();
       });
-      this.getComments();
-      this.$forceUpdate();
-      this.clearForm();
     },
     clearForm() {
       this.title = "";

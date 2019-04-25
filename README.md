@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cb6b1238-7d79-4268-858a-7458603f4d36/deploy-status)](https://app.netlify.com/sites/zilif/deploys)
+
 # discussion-test
 
 ## Project setup
