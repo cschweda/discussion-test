@@ -1,6 +1,6 @@
 module.exports = {
   markdownItOptions: {
-    html: true,
+    html: false,
     xhtmlOut: false,
     breaks: true,
     langPrefix: "language-",
@@ -8,10 +8,18 @@ module.exports = {
     typographer: false,
     quotes: "“”‘’"
   },
+  api: {
+    development: {
+      url: "https://api.zilif.dev"
+    },
+    production: {
+      url: "https://api.zilif.dev"
+    }
+  },
   meta: {
-    url: "https://continuum-mh.netlify.com",
+    url: "https://api.zilif.dev",
     appID: "74bffe3e-4789-4008-89be-d171f603e0cb",
-    title: "Discussion API"
+    title: "ZilIF Discussion API"
   },
   debug: false
 };

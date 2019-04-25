@@ -8,13 +8,14 @@
     <div v-if="!commentsExist">No discussions yet</div>
     <div v-for="comment in comments" :key="comment.id">
       <v-card class="mb-3 elevation-0" v-if="!comment.hidden">
-        <v-card-title
-          style="font-weight: 700; text-transform: uppercase; font-size: 16px;"
-          >{{ comment.title }}</v-card-title
-        >
-        <v-card-text style="margin-top: -25px;">{{
+        <v-card-text style="margin-top: 15px;">{{
           new Date(comment.created_at)
         }}</v-card-text>
+        <v-card-title
+          style="font-weight: 700; text-transform: uppercase; font-size: 16px; margin-top: -25px;"
+          >{{ comment.title }}</v-card-title
+        >
+
         <v-card-text>
           <span v-html="render(comment.content)" class="markdown-body">
             {{ comment.content }}
@@ -63,15 +64,9 @@
 import config from "@/config";
 const axios = require("axios");
 const md5 = require("md5");
-let md = require("markdown-it")({
-  html: true,
-  xhtmlOut: false,
-  breaks: false,
-  langPrefix: "language-",
-  linkify: true,
-  typographer: false,
-  quotes: "“”‘’"
-}).use(require("markdown-it-named-headers"));
+let md = require("markdown-it")(config.markdownItOptions).use(
+  require("markdown-it-named-headers")
+);
 
 export default {
   props: {
@@ -99,33 +94,17 @@ export default {
     },
     submit() {
       axios({
-        url: "http://localhost:5000/graphql",
+        url: `${this.config.api[process.env.NODE_ENV].url}/comments`,
         method: "post",
         data: {
-          query: `
-           mutation {
-  createComments (input: {
-    data: {
-      title: "${this.title}",
-      discussionID: "${this.discussionID}",
-      content: "${this.markdown}",
-      hidden: ${this.hidden},
-      user: "${this.userID}"
-
-    }
-  }) {
-    comment {
-      id
-    }
-  }
-}
-      `
+          title: this.title,
+          content: this.markdown,
+          discussionID: this.discussionID,
+          hidden: false,
+          user: "2"
         }
       }).then(result => {
-        console.log(
-          "Successful mutation. ID:",
-          result.data.data.createComments.comment.id
-        );
+        console.log(result.data.id);
       });
       this.getComments();
       this.$forceUpdate();
@@ -137,7 +116,7 @@ export default {
     },
     getComments() {
       axios({
-        url: "http://localhost:5000/graphql",
+        url: `${this.config.api[process.env.NODE_ENV].url}/graphql`,
         method: "post",
         data: {
           query: `
@@ -201,15 +180,21 @@ export default {
 .markdown-body h3,
 .markdown-body h4 {
   font-size: 14px;
-  margin-bottom: 10px;
-  margin-top: 15px;
+  margin-bottom: 8px;
+  margin-top: 25px;
 }
 
 .markdown-body h1 {
   text-transform: uppercase;
+  border-bottom: 0px solid #eee;
+  font-weight: 900;
 }
 
 .markdown-body h2 {
   border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  color: #666;
 }
 </style>
