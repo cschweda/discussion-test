@@ -13,12 +13,15 @@
 
     <div v-if="!commentsExist">No discussions yet</div>
     <div v-for="comment in comments" :key="comment.id">
-      <v-card
-        class="mb-3 elevation-2"
-        v-if="!comment.hidden"
-        @click="getRef(comment.id)"
-      >
-        <v-card-text style="margin-top: 25px;"></v-card-text>
+      <v-card class="mb-3 elevation-2" v-if="!comment.hidden">
+        <div
+          @click="getRef(comment.id, comment.user.username)"
+          class="text-xs-right px-3 py-3 quote"
+          v-if="isLoggedIn"
+          style="font-weight: 700"
+        >
+          Quote this post
+        </div>
 
         <v-card-title
           style="font-weight: 700; text-transform: uppercase; font-size: 16px; margin-top: -25px;"
@@ -34,7 +37,7 @@
           </span>
           <div class="text-xs-right mt-3">
             {{ new Date(comment.created_at) }}<br />
-            {{ comment.user.username }}
+            <span class="username">{{ comment.user.username }}</span>
           </div>
         </v-card-text>
       </v-card>
@@ -54,7 +57,7 @@
               value=""
               hint="Enter your comment"
               v-model="markdown"
-              class="py-2 px-1"
+              class="py-2 px-1 markdownArea"
             ></v-textarea>
           </v-tab-item>
           <v-tab ripple> Preview </v-tab>
@@ -89,6 +92,7 @@ let md = require("markdown-it")(config.markdownItOptions);
 md.use(prism).use(namedHeaders);
 import client from "@/services/client";
 import CommentLogin from "@/components/CommentLogin";
+// eslint-disable-next-line no-undef
 const turndownService = new TurndownService();
 
 export default {
@@ -151,9 +155,14 @@ export default {
       this.snackbar = false;
       this.$store.dispatch("comments/clearCommentError");
     },
-    getRef(id) {
-      const markdown = turndownService.turndown(this.$refs[id][0].innerHTML);
-      console.log(markdown);
+    getRef(id, username) {
+      const markdown = turndownService.turndown(
+        `<b>${username}:</b><blockquote>${
+          this.$refs[id][0].innerHTML
+        }</blockquote>`
+      );
+      console.log(this.$refs);
+      this.markdown = this.markdown + `${markdown}\n`;
     }
   },
   computed: {
@@ -218,5 +227,10 @@ export default {
 
 .markdown-body h3 {
   color: #666;
+}
+
+.quote:hover {
+  cursor: pointer;
+  color: #777;
 }
 </style>
