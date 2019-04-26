@@ -17,6 +17,11 @@
     </v-toolbar>
 
     <v-content>
+      <v-progress-linear
+        :indeterminate="true"
+        v-if="isLoading"
+        style="margin: 0; padding: 0; margin-top: -3px;"
+      ></v-progress-linear>
       <router-view></router-view>
     </v-content>
   </v-app>
@@ -24,6 +29,7 @@
 
 <script>
 import config from "@/config";
+import { EventBus } from "./event-bus.js";
 export default {
   name: "App",
   components: {},
@@ -40,12 +46,20 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.state.auth.isLoggedIn;
+    },
+    isLoading() {
+      return this.$store.state.loading.isLoading;
     }
   },
   created() {
     if (!this.$store.state.appInit) {
       this.$store.dispatch("auth/appInit");
     }
+  },
+  mounted() {
+    EventBus.$on("isLoading", status => {
+      this.$store.dispatch("loading/setLoadingStatus", status);
+    });
   }
 };
 </script>

@@ -10,11 +10,13 @@ const client = axios.create({
 
 client.interceptors.request.use(config => {
   NProgress.start();
+  EventBus.$emit("isLoading", true);
   return config;
 });
 
 client.interceptors.response.use(response => {
   NProgress.done();
+  EventBus.$emit("isLoading", false);
   return response;
 });
 
@@ -76,6 +78,7 @@ export default {
       `
       })
       .catch(err => {
+        EventBus.$emit("commentError", err);
         console.log(err);
       });
   },

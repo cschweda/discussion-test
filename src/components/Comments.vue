@@ -24,7 +24,7 @@
         </div>
 
         <v-card-title
-          style="font-weight: 700; text-transform: uppercase; font-size: 16px; margin-top: -25px;"
+          style="font-weight: 700; text-transform: uppercase; font-size: 16px; "
           >{{ comment.title }}</v-card-title
         >
 
@@ -46,7 +46,7 @@
     <v-card class="mt-5 mb-5" v-if="isLoggedIn">
       <v-card-text>
         Discussion ID: {{ discussionID }}
-        <v-text-field v-model="title" label="Title" required></v-text-field>
+        <v-text-field v-model="title" label="Title"></v-text-field>
         <v-tabs dark slider-color="red">
           <v-tab ripple> Write </v-tab>
           <v-tab-item>
@@ -191,7 +191,10 @@ export default {
       comment: "",
       userID: 2,
       markdown: "",
-      snackbar: false
+      snackbar: false,
+      rules: {
+        required: value => !!value || "Required."
+      }
     };
   }
 };
