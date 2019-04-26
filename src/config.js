@@ -16,11 +16,17 @@ module.exports = {
       url: "https://api.zilif.dev"
     }
   },
+  siteConfig: {
+    posts: {
+      type: "post",
+      sortOn: "posted"
+    }
+  },
   meta: {
     url: "https://api.zilif.dev",
     appID: "74bffe3e-4789-4008-89be-d171f603e0cb",
     title: "ZILIF",
-    subtitle: "Adventures in Programming ZIL"
+    subtitle: "Adventures in ZIL"
   },
   debug: false
 };

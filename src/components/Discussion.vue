@@ -17,9 +17,7 @@
         >
 
         <v-card-text>
-          <span v-html="render(comment.content)" class="markdown-body">
-            {{ comment.content }}
-          </span>
+          <span v-html="render(comment.content)" class="markdown-body"> </span>
         </v-card-text>
       </v-card>
     </div>
@@ -64,10 +62,10 @@
 import config from "@/config";
 const axios = require("axios");
 const md5 = require("md5");
-let md = require("markdown-it")(config.markdownItOptions).use(
-  require("markdown-it-named-headers")
-);
-
+const prism = require("markdown-it-prism");
+const namedHeaders = require("markdown-it-named-headers");
+let md = require("markdown-it")(config.markdownItOptions);
+md.use(prism).use(namedHeaders);
 export default {
   props: {
     path: {

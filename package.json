@@ -1,5 +1,5 @@
 {
-  "name": "discussion-test",
+  "name": "zilif",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,11 +10,17 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "core-js": "^3.0.1",
+    "core-js": "^2.6.5",
+    "front-matter": "^3.0.2",
     "github-markdown-css": "^3.0.1",
     "markdown-it": "^8.4.2",
+    "markdown-it-attrs": "^2.3.3",
+    "markdown-it-footnote": "^3.0.1",
     "markdown-it-named-headers": "0.0.4",
+    "markdown-it-prism": "^2.0.1",
     "md5": "^2.2.1",
+    "nprogress": "^0.2.0",
+    "slug": "^1.1.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6",
     "vuetify": "^1.5.13",
