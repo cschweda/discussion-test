@@ -40,7 +40,7 @@
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
-          <discussion :path="$route.path" :moderate="false"></discussion>
+          <comments :path="$route.path" :moderate="false"></comments>
         </v-flex>
       </v-container>
     </v-layout>
@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import Discussion from "@/components/Discussion";
+import Comments from "@/components/Comments";
 export default {
   components: {
-    Discussion
+    Comments
   }
 };
 </script>

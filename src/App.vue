@@ -43,7 +43,9 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("auth/appInit");
+    if (!this.$store.state.appInit) {
+      this.$store.dispatch("auth/appInit");
+    }
   }
 };
 </script>

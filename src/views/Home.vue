@@ -64,11 +64,11 @@
     <v-layout row>
       <v-container>
         <v-flex xs10 offset-xs1>
-          <discussion
+          <comments
             :path="$route.path"
             :appID="config.appID"
             :display="false"
-          ></discussion>
+          ></comments>
         </v-flex>
       </v-container>
     </v-layout>
@@ -77,7 +77,7 @@
 
 <script>
 import config from "@/config";
-import Discussion from "@/components/Discussion";
+import Comments from "@/components/Comments";
 export default {
   data() {
     return {
@@ -85,7 +85,7 @@ export default {
     };
   },
   components: {
-    Discussion
+    Comments
   }
 };
 </script>

@@ -3,6 +3,12 @@
     style="border-top: 1px solid #ccc; padding-top: 25px; min-height: 700px;"
     v-if="display"
   >
+    <v-snackbar v-model="snackbar" top :timeout="0">
+      {{ this.$store.state.comments.commentError }}
+      <v-btn color="pink" flat @click="clearError">
+        Close
+      </v-btn>
+    </v-snackbar>
     <h2 class="mb-3">Discussions</h2>
 
     <div v-if="!commentsExist">No discussions yet</div>
@@ -22,7 +28,7 @@
       </v-card>
     </div>
 
-    <v-card class="mt-5 mb-5" v-if="$store.state.auth.isLoggedIn">
+    <v-card class="mt-5 mb-5" v-if="isLoggedIn">
       <v-card-text>
         Discussion ID: {{ discussionID }}
         <v-text-field v-model="title" label="Title" required></v-text-field>
@@ -60,12 +66,13 @@
 <script>
 /* eslint-disable no-console */
 import config from "@/config";
-const axios = require("axios");
+import { EventBus } from "../event-bus.js";
 const md5 = require("md5");
 const prism = require("markdown-it-prism");
 const namedHeaders = require("markdown-it-named-headers");
 let md = require("markdown-it")(config.markdownItOptions);
 md.use(prism).use(namedHeaders);
+import client from "@/services/client";
 export default {
   props: {
     path: {
@@ -85,27 +92,30 @@ export default {
     this.discussionID = md5(config.meta.appID + this.path);
     this.getComments();
   },
+  mounted() {
+    EventBus.$on("commentError", payload => {
+      this.$store.dispatch("comments/setCommentError", payload);
+      this.snackbar = true;
+    });
+  },
 
   methods: {
     render(content) {
       return md.render(content);
     },
-    submit() {
-      axios({
-        url: `${this.config.api[process.env.NODE_ENV].url}/comments`,
-        method: "post",
-        data: {
-          title: this.title,
-          content: this.markdown,
-          discussionID: this.discussionID,
-          hidden: false,
-          user: "2"
-        }
-      }).then(result => {
-        console.log(result.data.id);
+    async submit() {
+      let payload = {
+        title: this.title,
+        content: this.markdown,
+        discussionID: this.discussionID,
+        hidden: false,
+        user: "2"
+      };
+      await client.submitComment(payload).then(res => {
         this.getComments();
         this.clearForm();
         this.$forceUpdate();
+        console.log("Status: ", res);
       });
     },
     clearForm() {
@@ -113,27 +123,13 @@ export default {
       this.markdown = "";
     },
     getComments() {
-      axios({
-        url: `${this.config.api[process.env.NODE_ENV].url}/graphql`,
-        method: "post",
-        data: {
-          query: `
-            {
-                comments(where: {discussionID: "${this.discussionID}"}) 
-                    {
-                        discussionID
-                        id
-                        title
-                        content,
-                        created_at,
-                        hidden
-                    }
-            }
-      `
-        }
-      }).then(result => {
-        this.comments = result.data.data.comments;
-      });
+      client
+        .getComments(this.discussionID)
+        .then(res => (this.comments = res.data.data.comments));
+    },
+    clearError() {
+      this.snackbar = false;
+      this.$store.dispatch("comments/clearCommentError");
     }
   },
   computed: {
@@ -148,6 +144,9 @@ export default {
     },
     hidden() {
       return this.moderate;
+    },
+    isLoggedIn() {
+      return this.$store.state.auth.isLoggedIn;
     }
   },
   data() {
@@ -158,10 +157,10 @@ export default {
       title: "",
       comment: "",
       userID: 2,
-      markdown: ""
+      markdown: "",
+      snackbar: false
     };
-  },
-  mounted() {}
+  }
 };
 </script>
 

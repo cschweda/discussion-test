@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
 import axios from "axios";
 import NProgress from "nprogress";
 import config from "@/config";
+import { EventBus } from "../event-bus.js";
 
 const client = axios.create({
   baseURL: config.api[process.env.NODE_ENV].url
@@ -17,6 +19,7 @@ client.interceptors.response.use(response => {
 });
 
 export default {
+  // Authentication
   authorize(jwt) {
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
@@ -24,12 +27,12 @@ export default {
       resolve("Bearer token set");
     });
   },
-  login(user) {
+  login({ identifier, password }) {
     return new Promise((resolve, reject) => {
       client
         .post(config.api.authRoute, {
-          identifier: user.identifier,
-          password: user.password
+          identifier,
+          password
         })
         .then(
           res => {
@@ -50,5 +53,32 @@ export default {
     delete client.defaults.headers.common["Authorization"];
     localStorage.removeItem("jwt");
     localStorage.removeItem("userMeta");
+  },
+  // Comments
+  async getComments(discussionID) {
+    return await client
+      .post("/graphql", {
+        query: `
+            {
+                comments(where: {discussionID: "${discussionID}"}) 
+                    {
+                        discussionID
+                        id
+                        title
+                        content,
+                        created_at,
+                        hidden
+                    }
+            }
+      `
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  async submitComment(payload) {
+    return await client.post("/comments", payload).catch(err => {
+      EventBus.$emit("commentError", err);
+    });
   }
 };
