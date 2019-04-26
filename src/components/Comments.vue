@@ -11,7 +11,6 @@
     </v-snackbar>
     <h2 class="mb-3">Comments</h2>
 
-    <div v-if="!commentsExist">No discussions yet</div>
     <div v-for="comment in comments" :key="comment.id">
       <v-card class="mb-3 elevation-2" v-if="!comment.hidden">
         <div
@@ -42,6 +41,7 @@
         </v-card-text>
       </v-card>
     </div>
+    <div v-if="!commentsExist">No discussions yet</div>
 
     <v-card class="mt-5 mb-5" v-if="isLoggedIn">
       <v-card-text>
