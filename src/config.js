@@ -14,7 +14,8 @@ module.exports = {
     },
     production: {
       url: "https://api.zilif.dev"
-    }
+    },
+    authRoute: "/auth/local"
   },
   siteConfig: {
     posts: {

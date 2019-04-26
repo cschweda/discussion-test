@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import client from "@/services/client.js";
 
 export const namespaced = true;
@@ -5,30 +6,44 @@ export const namespaced = true;
 export const state = {
   client,
   isLoggedIn: false,
-  role: ""
+  appInit: false,
+  jwt: localStorage.getItem("jwt") || "",
+  userMeta: JSON.parse(localStorage.getItem("userMeta")) || ""
 };
 
 export const mutations = {
+  INIT_APP(state) {
+    state.appInit = true;
+  },
   LOGIN(state) {
     state.isLoggedIn = true;
   },
   LOGOUT(state) {
     state.isLoggedIn = false;
-    state.role = "";
+    state.jwt = "";
+    state.userMeta = "";
     client.logout();
-  },
-  SET_ROLE(state, payload) {
-    state.role = payload;
   }
 };
 
 export const actions = {
+  appInit({ commit }) {
+    if (state.jwt) {
+      client.authorize(state.jwt).then(res => {
+        console.log(res);
+        commit("LOGIN");
+        commit("INIT_APP");
+      });
+    } else {
+      commit("INIT_APP");
+    }
+  },
   login({ commit }, user) {
     return new Promise((resolve, reject) => {
       client.login(user).then(
         res => {
           commit("LOGIN");
-          commit("SET_ROLE", res.data.user.role.name);
+
           resolve(res);
         },
         error => {

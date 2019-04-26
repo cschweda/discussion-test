@@ -6,7 +6,7 @@
     <h2 class="mb-3">Discussions</h2>
 
     <div v-if="!commentsExist">No discussions yet</div>
-    <div v-for="comment in comments" :key="comment.id">
+    <div v-for="comment in comments" :key="comment.id" :ref="comment.id">
       <v-card class="mb-3 elevation-0" v-if="!comment.hidden">
         <v-card-text style="margin-top: 15px;">{{
           new Date(comment.created_at)
@@ -22,7 +22,7 @@
       </v-card>
     </div>
 
-    <v-card class="mt-5 mb-5">
+    <v-card class="mt-5 mb-5" v-if="$store.state.auth.isLoggedIn">
       <v-card-text>
         Discussion ID: {{ discussionID }}
         <v-text-field v-model="title" label="Title" required></v-text-field>
@@ -160,7 +160,8 @@ export default {
       userID: 2,
       markdown: ""
     };
-  }
+  },
+  mounted() {}
 };
 </script>
 
