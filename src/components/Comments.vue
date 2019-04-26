@@ -9,21 +9,33 @@
         Close
       </v-btn>
     </v-snackbar>
-    <h2 class="mb-3">Discussions</h2>
+    <h2 class="mb-3">Comments</h2>
 
     <div v-if="!commentsExist">No discussions yet</div>
-    <div v-for="comment in comments" :key="comment.id" :ref="comment.id">
-      <v-card class="mb-3 elevation-0" v-if="!comment.hidden">
-        <v-card-text style="margin-top: 15px;">{{
-          new Date(comment.created_at)
-        }}</v-card-text>
+    <div v-for="comment in comments" :key="comment.id">
+      <v-card
+        class="mb-3 elevation-2"
+        v-if="!comment.hidden"
+        @click="getRef(comment.id)"
+      >
+        <v-card-text style="margin-top: 25px;"></v-card-text>
+
         <v-card-title
           style="font-weight: 700; text-transform: uppercase; font-size: 16px; margin-top: -25px;"
           >{{ comment.title }}</v-card-title
         >
 
         <v-card-text>
-          <span v-html="render(comment.content)" class="markdown-body"> </span>
+          <span
+            v-html="render(comment.content)"
+            class="markdown-body"
+            :ref="comment.id"
+          >
+          </span>
+          <div class="text-xs-right mt-3">
+            {{ new Date(comment.created_at) }}<br />
+            {{ comment.user.username }}
+          </div>
         </v-card-text>
       </v-card>
     </div>
@@ -77,6 +89,8 @@ let md = require("markdown-it")(config.markdownItOptions);
 md.use(prism).use(namedHeaders);
 import client from "@/services/client";
 import CommentLogin from "@/components/CommentLogin";
+const turndownService = new TurndownService();
+
 export default {
   props: {
     path: {
@@ -101,7 +115,6 @@ export default {
       this.$store.dispatch("comments/setCommentError", payload);
       this.snackbar = true;
     });
-    console.log(this.isLoggedIn);
   },
   components: {
     CommentLogin
@@ -119,11 +132,10 @@ export default {
         hidden: false,
         user: "2"
       };
-      await client.submitComment(payload).then(res => {
+      await client.submitComment(payload).then(() => {
         this.getComments();
         this.clearForm();
         this.$forceUpdate();
-        console.log("Status: ", res);
       });
     },
     clearForm() {
@@ -138,6 +150,10 @@ export default {
     clearError() {
       this.snackbar = false;
       this.$store.dispatch("comments/clearCommentError");
+    },
+    getRef(id) {
+      const markdown = turndownService.turndown(this.$refs[id][0].innerHTML);
+      console.log(markdown);
     }
   },
   computed: {

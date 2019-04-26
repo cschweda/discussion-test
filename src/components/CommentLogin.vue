@@ -8,7 +8,7 @@
       <v-container>
         <v-text-field
           v-model="username"
-          label="Username"
+          label="Username or email"
           class="input-group--focused"
           :rules="[rules.required]"
           ref="username"

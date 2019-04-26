@@ -67,7 +67,10 @@ export default {
                         title
                         content,
                         created_at,
-                        hidden
+                        hidden,
+                        user {
+                            username
+                        }
                     }
             }
       `

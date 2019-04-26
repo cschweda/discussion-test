@@ -26,8 +26,8 @@ module.exports = {
   meta: {
     url: "https://api.zilif.dev",
     appID: "74bffe3e-4789-4008-89be-d171f603e0cb",
-    title: "ZILIF",
-    subtitle: "Adventures in ZIL"
+    title: "TITLE",
+    subtitle: "Subtitle"
   },
   debug: false
 };
