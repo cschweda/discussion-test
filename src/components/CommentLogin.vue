@@ -1,9 +1,8 @@
 <template>
   <v-form ref="form" v-model="valid" lazy-validation>
-    <v-card :class="loginError ? 'login-error' : ''" width="300px">
+    <v-card :class="loginError ? 'login-error' : ''">
       <v-card-text class="text-xs-center">
-        <h3>Log in</h3>
-        <h3 style="font-weight:300;">with a valid account</h3>
+        <h3>Log in to post a comment</h3>
       </v-card-text>
 
       <v-container>
@@ -28,10 +27,17 @@
           @keyup.enter="login"
           @click:append="showPassword = !showPassword"
         />
-
-        <v-btn block color="primary" @click="login" @keyup.enter="login">
-          <template>{{ "log in" }}</template>
-        </v-btn>
+        <div class="text-xs-right">
+          <router-link to="/">Register</router-link>
+          <v-btn
+            color="grey lighten-2"
+            @click="login"
+            @keyup.enter="login"
+            class="ml-4"
+          >
+            <template>{{ "log in" }}</template>
+          </v-btn>
+        </div>
 
         <v-card-text
           v-if="loginError"
@@ -51,6 +57,12 @@ export default {
   },
   mounted() {
     this.$nextTick(this.$refs.username.focus);
+  },
+  props: {
+    path: {
+      type: String,
+      default: "/"
+    }
   },
   data() {
     return {
@@ -73,7 +85,7 @@ export default {
         };
         this.$store
           .dispatch("auth/login", user)
-          .then(() => this.$router.push("/"))
+
           .catch(() => {
             this.loginError = true;
           });

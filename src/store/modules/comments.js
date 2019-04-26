@@ -12,6 +12,7 @@ export const mutations = {
     state.commentError = error;
     state.isCommentError = true;
   },
+  // eslint-disable-next-line no-unused-vars
   CLEAR_COMMENT_ERROR(state, error) {
     state.commentError = "";
     state.isCommentError = false;

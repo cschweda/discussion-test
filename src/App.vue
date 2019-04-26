@@ -12,7 +12,7 @@
       <v-spacer></v-spacer>
       <v-btn to="/" class="heavy">Home</v-btn>
       <v-btn to="/about" class="heavy">About</v-btn>
-      <v-btn v-if="!isLoggedIn" to="/login" class="heavy">Login</v-btn>
+
       <v-btn v-if="isLoggedIn" class="heavy" @click="logout">Logout</v-btn>
     </v-toolbar>
 

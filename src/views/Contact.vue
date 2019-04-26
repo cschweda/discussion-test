@@ -2,7 +2,7 @@
   <div class="page">
     <v-layout row>
       <v-container>
-        <v-flex xs10 offset-xs1>
+        <v-flex xs12 sm12 md10 offset-md1>
           <h1>Contact Us</h1>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed

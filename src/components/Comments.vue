@@ -60,6 +60,9 @@
         </div>
       </v-card-text>
     </v-card>
+    <div v-if="!isLoggedIn">
+      <comment-login :path="$route.path"></comment-login>
+    </div>
   </div>
 </template>
 
@@ -73,6 +76,7 @@ const namedHeaders = require("markdown-it-named-headers");
 let md = require("markdown-it")(config.markdownItOptions);
 md.use(prism).use(namedHeaders);
 import client from "@/services/client";
+import CommentLogin from "@/components/CommentLogin";
 export default {
   props: {
     path: {
@@ -97,6 +101,10 @@ export default {
       this.$store.dispatch("comments/setCommentError", payload);
       this.snackbar = true;
     });
+    console.log(this.isLoggedIn);
+  },
+  components: {
+    CommentLogin
   },
 
   methods: {
