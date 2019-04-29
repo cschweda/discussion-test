@@ -47,28 +47,45 @@
       <v-card-text>
         Discussion ID: {{ discussionID }}
         <v-text-field v-model="title" label="Title"></v-text-field>
-        <v-tabs dark slider-color="red">
-          <v-tab ripple> Write </v-tab>
-          <v-tab-item>
-            <v-textarea
-              box
-              height="250"
-              name="input-7-1"
-              value=""
-              hint="Enter your comment"
-              v-model="markdown"
-              class="py-2 px-1 markdownArea"
-            ></v-textarea>
-          </v-tab-item>
-          <v-tab ripple> Preview </v-tab>
-          <v-tab-item>
-            <div
-              class="markdown-body py-3 px-1"
-              v-html="renderedText"
-              style="min-height: 300px;"
-            ></div>
-          </v-tab-item>
-        </v-tabs>
+
+        <v-toolbar dense class="elevation-0">
+          <v-btn
+            small
+            :dark="!isPreview"
+            flat
+            @click="switchMode"
+            :class="{ red: !isPreview }"
+            >Write</v-btn
+          >
+          <v-btn
+            small
+            :dark="isPreview"
+            :class="{ red: isPreview }"
+            flat
+            @click="switchMode"
+            >Preview</v-btn
+          >
+
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-textarea
+          v-if="!isPreview"
+          box
+          height="250"
+          name="input-7-1"
+          value=""
+          hint="Enter your comment"
+          v-model="markdown"
+          class="markdownArea"
+          style="border-top: 1px solid #ccc;"
+        ></v-textarea>
+
+        <div
+          v-if="isPreview"
+          class="markdown-body py-3 px-1"
+          v-html="renderedText"
+          style="min-height: 250px;"
+        ></div>
 
         <div class="text-xs-right">
           <v-btn @click.prevent="submit">Submit</v-btn>
@@ -163,6 +180,9 @@ export default {
       );
       console.log(this.$refs);
       this.markdown = this.markdown + `${markdown}\n`;
+    },
+    switchMode() {
+      this.isPreview = !this.isPreview;
     }
   },
   computed: {
@@ -194,7 +214,8 @@ export default {
       snackbar: false,
       rules: {
         required: value => !!value || "Required."
-      }
+      },
+      isPreview: false
     };
   }
 };
