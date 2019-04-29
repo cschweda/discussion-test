@@ -43,7 +43,7 @@
     </div>
     <div v-if="!commentsExist">No discussions yet</div>
 
-    <v-card class="mt-5 mb-5" v-if="isLoggedIn">
+    <v-card class="mt-5 mb-5" v-if="isLoggedIn" style="height: 550px;">
       <v-card-text>
         Discussion ID: {{ discussionID }}
         <v-text-field v-model="title" label="Title"></v-text-field>
@@ -71,7 +71,7 @@
         <v-textarea
           v-if="!isPreview"
           box
-          height="250"
+          height="300"
           name="input-7-1"
           value=""
           hint="Enter your comment"
@@ -82,9 +82,9 @@
 
         <div
           v-if="isPreview"
-          class="markdown-body py-3 px-1"
+          class="markdown-body mb-4 py-4 px-2"
           v-html="renderedText"
-          style="min-height: 250px;"
+          style="border-bottom: 2px solid #bbb; background: #fff; height: 310px; overflow-y: scroll !important"
         ></div>
 
         <div class="text-xs-right">
@@ -92,6 +92,7 @@
         </div>
       </v-card-text>
     </v-card>
+
     <div v-if="!isLoggedIn">
       <comment-login :path="$route.path"></comment-login>
     </div>
